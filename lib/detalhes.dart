@@ -4,11 +4,15 @@ class DetalhesPage extends StatelessWidget {
 
   final String nomeFilme;
   final String imagemFilme;
+  final String descricaoFilme;
 
   const DetalhesPage({
+
     super.key,
+
     required this.nomeFilme,
     required this.imagemFilme,
+    required this.descricaoFilme,
   });
 
   @override
@@ -20,39 +24,75 @@ class DetalhesPage extends StatelessWidget {
         title: const Text("Detalhes do Filme"),
       ),
 
-      body: Center(
+      body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.all(20),
 
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+
+            crossAxisAlignment: CrossAxisAlignment.center,
 
             children: [
 
-              Image.asset(
-                imagemFilme,
-                height: 250,
+              ClipRRect(
+
+                borderRadius: BorderRadius.circular(16),
+
+                child: Image.asset(
+
+                  imagemFilme,
+
+                  height: 350,
+
+                  fit: BoxFit.cover,
+                ),
               ),
 
               const SizedBox(height: 20),
 
               Text(
+
                 nomeFilme,
 
+                textAlign: TextAlign.center,
+
                 style: const TextStyle(
-                  fontSize: 28,
+
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              Text(
 
-                child: const Text("Voltar"),
+                descricaoFilme,
+
+                textAlign: TextAlign.justify,
+
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              SizedBox(
+
+                width: double.infinity,
+
+                child: ElevatedButton(
+
+                  onPressed: () {
+
+                    Navigator.pop(context);
+
+                  },
+
+                  child: const Text("Voltar"),
+                ),
               ),
             ],
           ),
