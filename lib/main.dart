@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'detalhes.dart';
-import 'filme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,242 +11,186 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Catálogo de Filmes',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const TelaPrincipal(),
-      debugShowCheckedModeBanner: false,
+      home: const HomePage(),
     );
   }
 }
 
-class TelaPrincipal extends StatefulWidget {
-  const TelaPrincipal({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<TelaPrincipal> createState() => _TelaPrincipalState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _TelaPrincipalState extends State<TelaPrincipal> {
-  final TextEditingController _controller = TextEditingController();
-  final TextEditingController _urlController = TextEditingController();
+class _HomePageState extends State<HomePage> {
+  TextEditingController controller = TextEditingController();
 
-  final List<Filme> _filmes = [];
+  List<Map<String, String>> filmes = [
+    {
+      "nome": "Como eu era antes de você",
+      "imagem": "../images/filme1.jpg",
+      "descricao": "Um romance emocionante sobre amor e superação.",
+    },
+    {
+      "nome": "O badboy e eu",
+      "imagem": "../images/filme2.jpg",
+      "descricao": "Uma história de amor entre um badboy e uma garota doce.",
+    },
+    {
+      "nome": "Wicked",
+      "imagem": "../images/filme3.jpg",
+      "descricao": "Um musical mágico que conta a história das bruxas de Oz.",
+    },
+    {
+      "nome": "Viva a vida é uma festa",
+      "imagem": "../images/filme4.jpg",
+      "descricao": "Uma aventura musical que celebra a importância da família e das tradições.",
+    },
+    {
+      "nome": "A empregada",
+      "imagem": "../images/filme5.jpg",
+      "descricao": "Um drama intenso sobre a luta por justiça e igualdade.",
+    },
+  ];
 
-  Color _corFundo = Colors.white;
+  Color corFundo = Colors.white;
 
-  void _adicionarFilme() {
-    if (_controller.text.isNotEmpty) {
+  void adicionarFilme() {
+    if (controller.text.isNotEmpty) {
       setState(() {
-        _filmes.add(
-          Filme(
-            nome: _controller.text,
-            imagemUrl:
-                _urlController.text.isNotEmpty
-                    ? _urlController.text
-                    : null,
-          ),
-        );
-
-        _controller.clear();
-        _urlController.clear();
+        filmes.add({
+          "nome": controller.text,
+          "imagem": "images/avatar.jpg",
+        });
       });
+
+      controller.clear();
     }
   }
 
-  void _removerFilme(int index) {
+  void removerFilme(int index) {
     setState(() {
-      _filmes.removeAt(index);
+      filmes.removeAt(index);
     });
   }
 
-  void _alterarCorFundo() {
+  void alterarCor() {
     setState(() {
-      _corFundo =
-          _corFundo == Colors.white
-              ? Colors.blue[50]!
-              : Colors.white;
+      if (corFundo == Colors.white) {
+        corFundo = Colors.blue.shade100;
+      } else if (corFundo == Colors.blue.shade100) {
+        corFundo = Colors.green.shade100;
+      } else {
+        corFundo = Colors.white;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _corFundo,
+      backgroundColor: corFundo,
+
       appBar: AppBar(
-        title: const Text('Catálogo de Filmes'),
+        title: const Text("Catálogo de Filmes"),
         centerTitle: true,
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
       ),
+
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
+
         child: Column(
           children: [
+
             TextField(
-              controller: _controller,
+              controller: controller,
+
               decoration: InputDecoration(
-                labelText: 'Nome do filme',
-                hintText: 'Ex: Vingadores',
+                labelText: "Digite o nome do filme",
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                prefixIcon: const Icon(Icons.movie),
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
-            TextField(
-              controller: _urlController,
-              decoration: InputDecoration(
-                labelText: 'URL da imagem',
-                hintText: 'https://...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                prefixIcon: const Icon(Icons.image),
+            SizedBox(
+              width: double.infinity,
+
+              child: ElevatedButton(
+                onPressed: adicionarFilme,
+                child: const Text("Adicionar Filme"),
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _adicionarFilme,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.all(16),
-                    ),
-                    icon: const Icon(Icons.add),
-                    label: const Text('Adicionar'),
-                  ),
-                ),
+            SizedBox(
+              width: double.infinity,
 
-                const SizedBox(width: 8),
-
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _alterarCorFundo,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.all(16),
-                    ),
-                    icon: const Icon(Icons.color_lens),
-                    label: const Text('Cor'),
-                  ),
-                ),
-              ],
+              child: ElevatedButton(
+                onPressed: alterarCor,
+                child: const Text("Alterar Cor de Fundo"),
+              ),
             ),
 
             const SizedBox(height: 20),
 
             Expanded(
-              child:
-                  _filmes.isEmpty
-                      ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.movie_filter,
-                              size: 64,
-                              color: Colors.grey[400],
-                            ),
+              child: ListView.builder(
+                itemCount: filmes.length,
 
-                            const SizedBox(height: 16),
+                itemBuilder: (context, index) {
 
-                            Text(
-                              'Nenhum filme cadastrado',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
+                  return Card(
+                    child: ListTile(
+
+                      leading: Image.asset(
+                        filmes[index]["imagem"]!,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+
+                      title: Text(
+                        filmes[index]["nome"]!,
+                      ),
+
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
                         ),
-                      )
-                      : ListView.builder(
-                        itemCount: _filmes.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            elevation: 3,
-                            child: ListTile(
-                              leading:
-                                  _filmes[index].imagemUrl != null
-                                      ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8),
-                                        child: Image.network(
-                                          _filmes[index].imagemUrl!,
-                                          width: 50,
-                                          height: 70,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (
-                                                context,
-                                                error,
-                                                stackTrace,
-                                              ) {
-                                                return Container(
-                                                  width: 50,
-                                                  height: 70,
-                                                  color: Colors.grey[300],
-                                                  child: const Icon(
-                                                    Icons.broken_image,
-                                                  ),
-                                                );
-                                              },
-                                        ),
-                                      )
-                                      : Container(
-                                        width: 50,
-                                        height: 70,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Icon(
-                                          Icons.movie,
-                                          color: Colors.blue[400],
-                                        ),
-                                      ),
 
-                              title: Text(
-                                _filmes[index].nome,
-                              ),
-
-                              trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                                onPressed:
-                                    () => _removerFilme(index),
-                              ),
-
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => TelaDetalhes(
-                                          filme: _filmes[index],
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
+                        onPressed: () {
+                          removerFilme(index);
                         },
                       ),
+
+                      onTap: () {
+
+                        Navigator.push(
+                          context,
+
+                          MaterialPageRoute(
+                            builder: (context) => DetalhesPage(
+                              nomeFilme: filmes[index]["nome"]!,
+                              imagemFilme: filmes[index]["imagem"]!,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
